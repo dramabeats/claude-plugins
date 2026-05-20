@@ -1,0 +1,25 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "dramabeats",
+  "description": "Personal Claude Code plugin marketplace",
+  "owner": {
+    "name": "Caleb",
+    "email": "calebfg2@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "tabshots",
+      "description": "Screenshot watcher with OCR — type 'screenshot' in any Claude Code prompt for automatic context injection.",
+      "author": {
+        "name": "Caleb"
+      },
+      "category": "productivity",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/dramabeats/claude-plugins.git",
+        "path": "plugins/tabshots",
+        "ref": "master"
+      }
+    }
+  ]
+}
