@@ -1,6 +1,6 @@
 {
   "name": "tabwright",
-  "version": "0.1.0",
-  "description": "Human-like web crawler for Claude research via Playwright",
+  "version": "0.2.0",
+  "description": "Human-like web crawler for Claude research via Camoufox (hardened Firefox)",
   "mcp": ".mcp.json"
 }
