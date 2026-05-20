@@ -1,0 +1,6 @@
+{
+  "name": "tabwright",
+  "version": "0.1.0",
+  "description": "Human-like web crawler for Claude research via Playwright",
+  "mcp": ".mcp.json"
+}
