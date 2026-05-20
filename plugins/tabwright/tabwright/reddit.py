@@ -1,4 +1,26 @@
 from bs4 import BeautifulSoup
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+
+from tabwright.browser import new_context
+from tabwright.stealth import random_delay
+
+
+async def fetch_reddit(url: str) -> dict:
+    """Fetch a Reddit page with Playwright and return extracted post+comment markdown."""
+    context = await new_context()
+    page = await context.new_page()
+    try:
+        await page.goto(url, wait_until="networkidle", timeout=30000)
+        await random_delay(0.5, 1.5)
+        html = await page.content()
+        return extract_reddit(html, url)
+    except PlaywrightTimeoutError:
+        return {"url": url, "content": "", "content_type": "reddit", "error": "timeout"}
+    except Exception:
+        return {"url": url, "content": "", "content_type": "reddit", "error": "blocked"}
+    finally:
+        await page.close()
+        await context.close()
 
 
 def extract_reddit(html: str, url: str) -> dict:

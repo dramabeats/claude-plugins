@@ -1,17 +1,16 @@
 from contextlib import asynccontextmanager
 
 from mcp.server.fastmcp import FastMCP
-from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
-from tabwright.browser import close_browser, new_context
+from tabwright.browser import close_browser
 from tabwright.fetcher import fetch_page as _fetch_generic
-from tabwright.reddit import extract_reddit
+from tabwright.reddit import fetch_reddit as _fetch_reddit
 from tabwright.search import web_search as _web_search
-from tabwright.stealth import random_delay
 
 
 @asynccontextmanager
 async def lifespan(server):
+    """Ensure the browser is closed cleanly when the MCP server shuts down."""
     try:
         yield
     finally:
@@ -38,20 +37,7 @@ async def fetch_page(url: str) -> dict:
     Automatically uses Reddit-optimised extraction for reddit.com URLs.
     Returns {url, content, content_type} or {url, content, content_type, error} on failure."""
     if "reddit.com" in url:
-        context = await new_context()
-        page = await context.new_page()
-        try:
-            await page.goto(url, wait_until="networkidle", timeout=30000)
-            await random_delay()
-            html = await page.content()
-            return extract_reddit(html, url)
-        except PlaywrightTimeoutError:
-            return {"url": url, "content": "", "content_type": "reddit", "error": "timeout"}
-        except Exception:
-            return {"url": url, "content": "", "content_type": "reddit", "error": "blocked"}
-        finally:
-            await page.close()
-            await context.close()
+        return await _fetch_reddit(url)
     return await _fetch_generic(url)
 
 
