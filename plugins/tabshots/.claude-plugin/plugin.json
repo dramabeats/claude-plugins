@@ -1,0 +1,8 @@
+{
+  "name": "tabshots",
+  "version": "0.1.0",
+  "description": "Screenshot watcher with OCR for Claude Code",
+  "mcp": ".mcp.json",
+  "hooks": "hooks/hooks.json",
+  "skills": ["skills/tabshots-setup"]
+}
