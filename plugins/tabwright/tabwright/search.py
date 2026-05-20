@@ -33,7 +33,7 @@ async def web_search(
         await page.goto(url, wait_until="domcontentloaded", timeout=30000)
         await random_delay()
 
-        selector_list = ", ".join(f'"{s}"' for s in _RESULT_SELECTORS)
+        selector_list = ", ".join(f"'{s}'" for s in _RESULT_SELECTORS)
         results = await page.evaluate(f"""
             () => {{
                 const selectors = [{selector_list}];
