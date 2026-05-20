@@ -10,9 +10,9 @@ python3 -m venv "$SCRIPT_DIR/venv"
 "$SCRIPT_DIR/venv/bin/pip" install -r "$SCRIPT_DIR/requirements.txt" --quiet
 echo "Python dependencies installed."
 
-echo "Installing Playwright chromium browser..."
-"$SCRIPT_DIR/venv/bin/python" -m playwright install chromium
-echo "Playwright ready."
+echo "Installing Camoufox browser (Firefox)..."
+"$SCRIPT_DIR/venv/bin/python" -m camoufox fetch
+echo "Camoufox ready."
 
 chmod +x "$SCRIPT_DIR/run-server.sh"
 
