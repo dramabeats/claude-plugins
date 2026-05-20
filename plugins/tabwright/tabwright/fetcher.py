@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from markdownify import markdownify
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 from tabwright.browser import new_context
 from tabwright.stealth import random_delay
@@ -26,8 +27,10 @@ async def fetch_page(url: str) -> dict:
         html = await page.content()
         content = html_to_markdown(html)
         return {"url": url, "content": content, "content_type": "generic"}
-    except Exception as e:
-        error = "timeout" if "timeout" in str(e).lower() else "blocked"
-        return {"url": url, "content": "", "content_type": "generic", "error": error}
+    except PlaywrightTimeoutError:
+        return {"url": url, "content": "", "content_type": "generic", "error": "timeout"}
+    except Exception:
+        return {"url": url, "content": "", "content_type": "generic", "error": "blocked"}
     finally:
+        await page.close()
         await context.close()

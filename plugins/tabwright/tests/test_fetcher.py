@@ -36,4 +36,4 @@ def test_converts_list_to_markdown():
 
 def test_empty_html_returns_empty_string():
     md = html_to_markdown("")
-    assert isinstance(md, str)
+    assert md == ""
