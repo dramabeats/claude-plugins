@@ -20,6 +20,20 @@
         "path": "plugins/tabshots",
         "ref": "master"
       }
+    },
+    {
+      "name": "tabwright",
+      "description": "Human-like Playwright browser for web research — web_search and fetch_page MCP tools with Reddit-aware extraction.",
+      "author": {
+        "name": "Caleb"
+      },
+      "category": "productivity",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/dramabeats/claude-plugins.git",
+        "path": "plugins/tabwright",
+        "ref": "master"
+      }
     }
   ]
 }
