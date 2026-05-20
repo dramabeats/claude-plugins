@@ -1,7 +1,22 @@
+import logging
 from urllib.parse import urlencode
+
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 from tabwright.browser import new_context
 from tabwright.stealth import random_delay
+
+logger = logging.getLogger(__name__)
+
+# kl=us-en sets DuckDuckGo locale to US English for consistent result structure
+_DDG_LOCALE = "us-en"
+
+# Try multiple selectors in order — DDG occasionally changes their DOM
+_RESULT_SELECTORS = [
+    '[data-testid="result"]',
+    "article.result",
+    ".results .result",
+]
 
 
 async def web_search(
@@ -9,7 +24,7 @@ async def web_search(
     prefer_reddit: bool = False,
     max_results: int = 10,
 ) -> list[dict]:
-    params = urlencode({"q": query, "kl": "us-en"})
+    params = urlencode({"q": query, "kl": _DDG_LOCALE})
     url = f"https://duckduckgo.com/?{params}"
 
     context = await new_context()
@@ -18,15 +33,21 @@ async def web_search(
         await page.goto(url, wait_until="domcontentloaded", timeout=30000)
         await random_delay()
 
-        results = await page.evaluate("""
-            () => {
-                const items = document.querySelectorAll('[data-testid="result"]');
-                return Array.from(items).map(item => ({
-                    title: (item.querySelector('h2') || {}).innerText || '',
-                    url: (item.querySelector('a[data-testid="result-title-a"]') || {}).href || '',
-                    snippet: (item.querySelector('[data-result="snippet"]') || {}).innerText || '',
-                })).filter(r => r.url !== '');
-            }
+        selector_list = ", ".join(f'"{s}"' for s in _RESULT_SELECTORS)
+        results = await page.evaluate(f"""
+            () => {{
+                const selectors = [{selector_list}];
+                let items = [];
+                for (const sel of selectors) {{
+                    const found = document.querySelectorAll(sel);
+                    if (found.length > 0) {{ items = Array.from(found); break; }}
+                }}
+                return items.map(item => ({{
+                    title: (item.querySelector('h2') || {{}}).innerText || '',
+                    url: (item.querySelector('a[data-testid="result-title-a"]') || item.querySelector('a[href]') || {{}}).href || '',
+                    snippet: (item.querySelector('[data-result="snippet"]') || item.querySelector('p') || {{}}).innerText || '',
+                }})).filter(r => r.url !== '' && r.url.startsWith('http'));
+            }}
         """)
 
         results = results[:max_results]
@@ -37,7 +58,11 @@ async def web_search(
             results = reddit_results + other_results
 
         return results
+    except PlaywrightTimeoutError:
+        logger.warning("web_search timed out for query: %s", query)
+        return []
     except Exception:
+        logger.exception("web_search failed for query: %s", query)
         return []
     finally:
         await page.close()
