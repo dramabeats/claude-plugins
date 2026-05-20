@@ -19,3 +19,4 @@ Then install plugins:
 | Plugin | Description |
 |--------|-------------|
 | tabshots | Screenshot watcher with OCR — type "screenshot" in any Claude Code prompt |
+| tabwright | Human-like Playwright browser for web research — `web_search` and `fetch_page` tools |
