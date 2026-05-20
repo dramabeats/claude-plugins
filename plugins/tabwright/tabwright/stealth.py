@@ -22,7 +22,7 @@ def random_user_agent() -> str:
     return random.choice(USER_AGENTS)
 
 
-def random_viewport() -> dict:
+def random_viewport() -> dict[str, int]:
     return random.choice(VIEWPORTS)
 
 

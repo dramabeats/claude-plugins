@@ -1,4 +1,3 @@
-import asyncio
 import pytest
 from tabwright.stealth import random_user_agent, random_viewport, random_delay
 
