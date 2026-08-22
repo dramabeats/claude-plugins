@@ -49,7 +49,7 @@ Then run `/plugin install` in Claude Code and restart.
 
 | Variable | Default | Description |
 |---|---|---|
-| `TABWRIGHT_HEADLESS` | `false` | Set to `true` for headless mode (CI/servers) |
+| `TABWRIGHT_HEADLESS` | `true` | Set in `.mcp.json`, since the MCP server has no display to draw to. Set to `false` to watch the browser while debugging. |
 | `TABWRIGHT_SKIP_INTEGRATION` | `false` | Set to `true` to skip integration tests |
 
 ## Running Tests

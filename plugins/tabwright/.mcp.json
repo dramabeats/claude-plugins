@@ -3,7 +3,9 @@
     "tabwright": {
       "command": "${CLAUDE_PLUGIN_ROOT}/run-server.sh",
       "args": [],
-      "env": {}
+      "env": {
+        "TABWRIGHT_HEADLESS": "true"
+      }
     }
   }
 }
